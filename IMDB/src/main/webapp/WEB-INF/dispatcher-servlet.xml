@@ -1,0 +1,36 @@
+<!-- tells the app which mappings to use for handlermapper,viewresolver,controller. 
+	note dispaterServlet is defined in web.xml not in this file -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+	<!-- following 13,14 lines added because mvc:annotation-driven statement -->
+	<!-- following line 6 is added because mvc:annotation-driven statement -->
+
+
+	<!-- giving below parameter tells front controller that we using annotation 
+		no we dont need to give handler mapper neither entry for controller classes 
+		here -->
+
+	<context:component-scan base-package="org.abhi.spring" />
+	<mvc:annotation-driven />
+	
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/</value>	<!-- all files inside this directory will be scanned to find the view file 
+				whose name matches exactly with name given by controller. -->
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+</beans>
