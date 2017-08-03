@@ -1,8 +1,16 @@
 package org.abhi.spring.model;
 
-public class Movie implements Comparable<Movie> {
+public class Movie {
 
-	private String name, plot, votes, year, rating, metascore;
+	private String name, plot, votes, year, rating,imdbId;
+
+	public String getImdbId() {
+		return imdbId;
+	}
+
+	public void setImdbId(String imdbId) {
+		this.imdbId = imdbId;
+	}
 
 	public String getName() {
 		return name;
@@ -42,19 +50,6 @@ public class Movie implements Comparable<Movie> {
 
 	public void setRating(String rating) {
 		this.rating = rating;
-	}
-
-	public String getMetascore() {
-		return metascore;
-	}
-
-	public void setMetascore(String metascore) {
-		this.metascore = metascore;
-	}
-
-	@Override
-	public int compareTo(Movie o) {
-		return Float.parseFloat(this.getRating()) <= Float.parseFloat(o.getRating()) ? 1 : -1;
 	}
 
 }

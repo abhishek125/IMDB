@@ -21,6 +21,7 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
 	<context:component-scan base-package="org.abhi.spring" />
 	<mvc:annotation-driven />
+	<mvc:resources mapping="/resources/**" location="/" />
 	
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

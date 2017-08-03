@@ -1,5 +1,4 @@
 package org.abhi.spring.service;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -17,26 +16,20 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 public class GetRating {
-	private String[] names;
-	private Movie[] movies;
 	private List<Movie> list;
 
-	public void setNames(String[] names) {
-		this.names = names;
-	}
-
-	public Movie[] getMovies() throws UnsupportedEncodingException {
+	
+	public List<Movie> getMovies(String[] names) throws UnsupportedEncodingException {
 		list = new ArrayList<>();
 		for (int i = 0; i < names.length; i++) {
 			if (names[i].length() < 2)
 				continue;
 			names[i] = names[i].replaceAll(
-					"[\\W_]|brrip|bluray|blu\\sray|bdrip|" + "camrip|dual audio|hdrip|webrip|web\\-dl", " ");
+					"[\\W_]|brrip|bluray|blu\\sray|bdrip|" + "camrip|entended edition|dual audio|hdrip|webrip|web\\-dl", " ");
 			Matcher m = Pattern.compile("((19|20)\\d{2})").matcher(names[i]);
 			String year = "";
 			if (m.find())
 				year = m.group(0);
-
 			String[] str = names[i].split("(19|20)\\d{2}");
 			System.out.println("string is=" + str[0] + "   " + year);
 			
@@ -44,55 +37,46 @@ public class GetRating {
 			if (movie != null)
 				list.add(movie);
 		}
-		movies = new Movie[list.size()];
-		list.toArray(movies); // fill array
-		return movies;
+		return list;
 	}
 
 	public Movie rating(String movieName, String year) {
 		String responseString = "";
 		try {
-
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpGet getRequest = new HttpGet(
-					"http://www.omdbapi.com/?t=" + movieName + "&y=" + year + "&plot=short&r=json");
-
+					"http://www.theimdbapi.org/api/find/movie?title=" + movieName + "&year=" + year + "");
 			getRequest.addHeader("accept", "application/json");
-
 			HttpResponse response = httpClient.execute(getRequest);
-
 			if (response.getStatusLine().getStatusCode() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
 			}
-
 			HttpEntity entity = response.getEntity();
 			responseString = EntityUtils.toString(entity, "UTF-8");
-
 			httpClient.getConnectionManager().shutdown();
-
 		} catch (IOException e) {
-
 			e.printStackTrace();
 		}
-
 		return setValues(responseString);
 
 	}
 
 	private Movie setValues(String responseString) {
-		JSONObject json = new JSONObject(responseString);
-		Movie movie = null;
-		if (((String) json.get("Response")).equals("True")) {
-			movie = new Movie();
-			String rating = (String) json.get("imdbRating");
-			rating = rating.equals("N/A") ? "0" : rating;// seting rating to 0
-															// if not available
-			movie.setName((String) json.get("Title"));
-			movie.setYear((String) json.get("Year"));
-			movie.setRating(rating);
-			movie.setVotes((String) json.get("imdbVotes"));
-			movie.setMetascore((String) json.get("Metascore"));
-			movie.setPlot((String) json.get("Plot"));
+		Movie movie = new Movie();
+		if (!responseString.equals("null")) {
+			responseString= responseString.substring(1, responseString.length()-1);
+			JSONObject json = new JSONObject(responseString);
+			movie.setName((String) json.get("title"));
+			movie.setImdbId((String) json.get("imdb_id"));
+			movie.setYear((String) json.get("year"));
+			movie.setRating((String)json.get("rating"));
+			movie.setVotes((String) json.get("rating_count"));
+			movie.setPlot((String) json.get("description"));
+		}
+		if(responseString.equals("null") || movie.getRating().equals(""))
+		{
+			movie.setRating("0");
+			movie.setVotes("0");
 		}
 		return movie;
 	}
