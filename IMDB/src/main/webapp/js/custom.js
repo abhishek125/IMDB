@@ -1,33 +1,35 @@
-var txt = "";
-function myFunction() {
-     var x = document.getElementById("movieNames");
+    var textNames;
+    function myFunction() {
+    	 textNames = "";
+         var x = document.getElementById("movieNames");
+         var target=document.getElementById("files");
+         if(x.files.length>0)
+         target.innerHTML=x.files.length+" files selected";
+         else
+         target.innerHTML="browse movies";
+         target.innerHTML+="<input type=\"file\" id=\"movieNames\" onchange=\"myFunction()\" multiple/>";
+         if ('files' in x) {
 
-     if ('files' in x) {
+           for (var i = 0; i < x.files.length; i++) {
+             var file = x.files[i];
+             if ('name' in file) {
+               textNames += file.name + "<br>";
+             }
 
-       for (var i = 0; i < x.files.length; i++) {
-         var file = x.files[i];
-         if ('name' in file) {
-           txt += file.name + "<br>";
+           }
          }
-
+         //document.getElementById("names").innerHTML = textNames;
        }
-     }
-     console.log("hey"+txt);
-     //document.getElementById("names").innerHTML = txt;
-   }
-var myApp=angular.module("myModule",[]);
-myApp.controller("myController",function($scope,$http){
-$scope.submitForm = function () {	
-	console.log("testing ");
-	$http.post( '/imdb/showrating.do', txt)
-	.then(function(response){
-		$scope.users=response.data;
-		console.log($scope.users);
-	}).catch(function(response) {
-		  console.error('Error occurred:', response.status, response.data);
-	}).finally(function() {
-		 console.log("Task Finished.");
-	});
-}
-});
-  
+    var myApp=angular.module("myModule",[]);
+    myApp.controller("myController",function($scope,$http){
+    $scope.sortColumn="name";
+    $scope.reverseSort=false;
+    $scope.submitForm = function () {	
+    	
+    	$http.post( '/imdb/showrating.do', JSON.stringify(textNames))
+    	.then(function(response){
+    		$scope.movies=response.data;
+    		console.log($scope.movies);
+    	});
+    }
+    });

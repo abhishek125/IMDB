@@ -1,6 +1,7 @@
 package org.abhi.spring.service;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +26,13 @@ public class GetRating {
 			if (names[i].length() < 2)
 				continue;
 			names[i] = names[i].replaceAll(
-					"[\\W_]|brrip|bluray|blu\\sray|bdrip|" + "camrip|entended edition|dual audio|hdrip|webrip|web\\-dl", " ");
+					"[\\W_]|brrip|bluray|blu\\sray|bdrip|" + "camrip|extended edition|extended collectors edition|Director s Cut|dual audio|hdrip|webrip|web\\-dl", " ");
 			Matcher m = Pattern.compile("((19|20)\\d{2})").matcher(names[i]);
 			String year = "";
 			if (m.find())
 				year = m.group(0);
 			String[] str = names[i].split("(19|20)\\d{2}");
-			System.out.println("string is=" + str[0] + "   " + year);
-			
+			//System.out.println("string is=" + str[0] + "   " + year);
 			Movie movie = rating(URLEncoder.encode(str[0], "UTF-8"), year);
 			if (movie != null)
 				list.add(movie);
@@ -40,7 +40,7 @@ public class GetRating {
 		return list;
 	}
 
-	public Movie rating(String movieName, String year) {
+	public Movie rating(String movieName, String year) throws UnsupportedEncodingException {
 		String responseString = "";
 		try {
 			DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -57,11 +57,11 @@ public class GetRating {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return setValues(responseString);
+		return setValues(responseString,year,URLDecoder.decode(movieName,"UTF-8"));
 
 	}
 
-	private Movie setValues(String responseString) {
+	private Movie setValues(String responseString,String year,String movieName) {
 		Movie movie = new Movie();
 		if (!responseString.equals("null")) {
 			responseString= responseString.substring(1, responseString.length()-1);
@@ -77,6 +77,10 @@ public class GetRating {
 		{
 			movie.setRating("0");
 			movie.setVotes("0");
+			movie.setName(movieName);
+			movie.setImdbId("not available");
+			movie.setYear(year);
+			movie.setPlot("movie not found");
 		}
 		return movie;
 	}

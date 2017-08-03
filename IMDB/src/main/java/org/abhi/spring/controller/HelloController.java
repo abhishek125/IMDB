@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import org.abhi.spring.model.Movie;
 import org.abhi.spring.service.GetRating;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 //this annotation tells front controller that this is controller class
@@ -24,16 +24,14 @@ public class HelloController {
 
 	@RequestMapping(value = "/showrating.do", method = RequestMethod.POST,headers="Accept=application/json")
 	@ResponseBody
-	public ArrayList<Movie> showRating(@RequestParam("textNames") String textNames)
+	public ArrayList<Movie> showRating(@RequestBody String textNames)
 			throws UnsupportedEncodingException // new annotation
 	{
-
 		textNames = textNames.replaceAll("<br>", "\n");
+		//System.out.println(textNames);
 		String[] movieNames = textNames.split("\n");
 		GetRating rating = new GetRating();
 		ArrayList<Movie> movies = (ArrayList<Movie>) rating.getMovies(movieNames);
-		//Arrays.sort(movies);
-		//ModelAndView modelandview = new ModelAndView("ShowRating", "movies", movies);
 		return movies;
 	}
 
