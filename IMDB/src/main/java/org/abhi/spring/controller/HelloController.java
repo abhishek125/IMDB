@@ -31,7 +31,7 @@ public class HelloController {
 		//System.out.println(textNames);
 		String[] movieNames = textNames.split("\n");
 		GetRating rating = new GetRating();
-		ArrayList<Movie> movies = (ArrayList<Movie>) rating.getMovies(movieNames);
+		ArrayList<Movie> movies =new ArrayList<Movie>(rating.getMovies(movieNames));
 		return movies;
 	}
 
