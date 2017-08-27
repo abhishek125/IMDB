@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Top navbar example for Bootstrap</title>
+    <title>multithreaded api for movie rating</title>
     <!-- Bootstrap core CSS -->
     <link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet"/>
       <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/angular.js"></script>
