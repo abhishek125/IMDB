@@ -5,7 +5,6 @@
          var target=document.getElementById("files");
          if(x.files.length>0){
          target.innerHTML=x.files.length+" files selected";
-         document.getElementById("loading").style.display = 'block';
          }
          else
          target.innerHTML="browse movies";
@@ -27,8 +26,11 @@
     $scope.sortColumn="name";
     $scope.reverseSort=false;
     $scope.submitForm = function () {	
-    	
-    	$http.post( '/imdb/showrating.do', JSON.stringify(textNames))
+    	document.getElementById("loading").style.display = 'block';
+    	imdbKey=document.getElementById("api").value;
+    	console.log(imdbKey);
+    	var data ={'textNames':JSON.stringify(textNames),'imdbKey':imdbKey};
+    	$http.post( '/imdb/showrating.do', data)
     	.then(function(response){
     		document.getElementById("loading").style.display = 'none';
     		$scope.movies=response.data;

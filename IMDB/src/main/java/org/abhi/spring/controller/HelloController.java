@@ -2,6 +2,7 @@ package org.abhi.spring.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.abhi.spring.model.Movie;
 import org.abhi.spring.service.GetRating;
@@ -24,13 +25,15 @@ public class HelloController {
 
 	@RequestMapping(value = "/showrating.do", method = RequestMethod.POST,headers="Accept=application/json")
 	@ResponseBody
-	public ArrayList<Movie> showRating(@RequestBody String textNames)
+	public ArrayList<Movie> showRating(@RequestBody  Map<String, String> json)
 			throws UnsupportedEncodingException // new annotation
 	{
-		textNames = textNames.replaceAll("<br>", "\n");
+		String textNames = json.get("textNames").replaceAll("<br>", "\n");
 		//System.out.println(textNames);
 		String[] movieNames = textNames.split("\n");
 		GetRating rating = new GetRating();
+		rating.imdbKey=json.get("imdbKey");
+		//System.out.println("this is key="+rating.imdbKey);
 		ArrayList<Movie> movies =new ArrayList<Movie>(rating.getMovies(movieNames));
 		return movies;
 	}

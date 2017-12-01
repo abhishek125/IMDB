@@ -14,11 +14,12 @@ import java.util.regex.Pattern;
 import org.abhi.spring.model.Movie;
 
 public class GetRating {
+	public String imdbKey;
 	private ConcurrentLinkedQueue<Movie> list;
 	private List<Future<Movie>> futures = new ArrayList<>();
 	public ConcurrentLinkedQueue<Movie> getMovies(String[] names) throws UnsupportedEncodingException {
 		list = new ConcurrentLinkedQueue<Movie>();
-		ExecutorService executorService=Executors.newFixedThreadPool(2);
+		ExecutorService executorService=Executors.newFixedThreadPool(20);
 		for (int i = 0; i < names.length; i++) {
 			if (names[i].length() < 2)
 				continue;
@@ -30,7 +31,10 @@ public class GetRating {
 				year = m.group(0);
 			String[] str = names[i].split("(19|20)\\d{2}");
 			//System.out.println("string is=" + str[0] + "   " + year);
-			futures.add(executorService.submit(new ConcurrentRatingHelper(URLEncoder.encode(str[0], "UTF-8"), year)));
+			if(imdbKey.equals(""))
+				futures.add(executorService.submit(new ConcurrentRatingHelper(URLEncoder.encode(str[0], "UTF-8"), year)));
+			else
+				futures.add(executorService.submit(new ConcurrentRatingHelperIMDB(URLEncoder.encode(str[0], "UTF-8"), year,imdbKey)));
 		}
 		executorService.shutdown();
 		try {
