@@ -63,6 +63,7 @@
         </div>
       <!--/.container-fluid -->
       </nav>
+      <img src="${pageContext.request.contextPath}/resources/images/loading.gif" id="loading" class="loading" />
       <table class="table table-striped table-bordered">
     		<thead>
     			<tr>

@@ -21,3 +21,10 @@
     outline: none;
     cursor: inherit;
 }
+.loading{
+	display:none;
+	width:50px;
+	height:50px; 
+	margin-left: auto;
+    margin-right: auto;
+}

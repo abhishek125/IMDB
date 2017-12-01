@@ -3,8 +3,10 @@
     	 textNames = "";
          var x = document.getElementById("movieNames");
          var target=document.getElementById("files");
-         if(x.files.length>0)
+         if(x.files.length>0){
          target.innerHTML=x.files.length+" files selected";
+         document.getElementById("loading").style.display = 'block';
+         }
          else
          target.innerHTML="browse movies";
          target.innerHTML+="<input type=\"file\" id=\"movieNames\" onchange=\"myFunction()\" multiple/>";
@@ -28,6 +30,7 @@
     	
     	$http.post( '/imdb/showrating.do', JSON.stringify(textNames))
     	.then(function(response){
+    		document.getElementById("loading").style.display = 'none';
     		$scope.movies=response.data;
     		console.log($scope.movies);
     	});
